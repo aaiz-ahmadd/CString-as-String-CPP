@@ -18,7 +18,10 @@ class String{
         d[i] = '\0';
     }
     public:
-        String() : str{nullptr} {}
+        String() {
+            str = new char[1];
+            str[0] = '\0';
+        }
         String(const char* _str){
             int size = sizeOfArray(_str);
             str = new char[size + 1];
@@ -102,10 +105,14 @@ class String{
             return *(str + pos);
         }
         char& front(){
+            if(str[0] == '\0')
+                return error;
             return str[0];
         }
         char& back(){
             int size = sizeOfArray(this->str);
+            if(size == 0)
+                return error;
             return str[size-1];
         }
         bool empty() const{
@@ -193,8 +200,11 @@ class String{
         int stoi() const{
             int num = 0;
             int i = 0;
-            for(; str[i] != '\0'; i++)
+            for(; str[i] != '\0'; i++){
+                if(str[i] < '0' || str[i] > '9')
+                    return -1;
                 num = (num * 10) + (str[i] - '0');
+            }
             return num;
         }
         static int stoi(const String _str){
